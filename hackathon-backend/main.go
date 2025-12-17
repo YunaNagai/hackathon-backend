@@ -194,10 +194,69 @@ func handleProductPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"id": id})
 }
+func handleProductGet(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query(`
+        SELECT id, seller_id, title, price, description, status, created_at
+        FROM products
+        ORDER BY created_at DESC
+    `)
+	if err != nil {
+		log.Printf("fail: db.Query, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type Product struct {
+		ID          string `json:"id"`
+		SellerID    string `json:"seller_id"`
+		Title       string `json:"title"`
+		Price       int    `json:"price"`
+		Description string `json:"description"`
+		Status      string `json:"status"`
+		CreatedAt   string `json:"created_at"`
+	}
+
+	products := make([]Product, 0)
+
+	for rows.Next() {
+		var p Product
+		if err := rows.Scan(
+			&p.ID, &p.SellerID, &p.Title, &p.Price,
+			&p.Description, &p.Status, &p.CreatedAt,
+		); err != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		products = append(products, p)
+	}
+
+	bytes, err := json.Marshal(products)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+}
+func productsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		handleProductGet(w, r)
+	case http.MethodPost:
+		handleProductPost(w, r)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+	}
+}
+
 func main() {
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", handler)
-	http.HandleFunc("/products", handleProductPost)
+	http.HandleFunc("/products", productsHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
