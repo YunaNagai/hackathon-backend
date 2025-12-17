@@ -172,7 +172,7 @@ func handleProductPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result, err := tx.Exec(`
-		INSERT INTO products (user_id, title, price, description, status, created_at)
+		INSERT INTO products (seller_id, title, price, description, status, created_at)
 		VALUES (?, ?, ?, ?, 'selling', NOW())
 	`, req.UserID, req.Title, req.Price, req.Description)
 
