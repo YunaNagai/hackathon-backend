@@ -145,10 +145,65 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+func handleProductPost(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		UserID      int    `json:"user_id"`
+		Title       string `json:"title"`
+		Price       int    `json:"price"`
+		Description string `json:"description"`
+	}
 
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Printf("fail: json.Decode, %v\n", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if req.Title == "" || req.Price <= 0 || req.UserID <= 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("fail: db.Begin, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	result, err := tx.Exec(`
+		INSERT INTO products (user_id, title, price, description, status, created_at)
+		VALUES (?, ?, ?, ?, 'selling', NOW())
+	`, req.UserID, req.Title, req.Price, req.Description)
+
+	if err != nil {
+		log.Printf("fail: db.Exec, %v\n", err)
+		tx.Rollback()
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Printf("fail: LastInsertId, %v\n", err)
+		tx.Rollback()
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Printf("fail: tx.Commit, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]int64{"id": id})
+}
 func main() {
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", handler)
+	http.HandleFunc("/products", handleProductPost)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
