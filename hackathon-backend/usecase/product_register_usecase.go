@@ -9,18 +9,20 @@ import (
 	"net/http"
 )
 
-func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	var req model.User
+func RegisterProducts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	var req model.Product
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if req.Age < 20 || req.Age > 80 {
+	if req.SellerID == "" || req.Title == "" || req.Price <= 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	req.ID = utils.NewULID()
+	req.Status = "selling"
+
 	if err := dao.InsertUser(db, req); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
