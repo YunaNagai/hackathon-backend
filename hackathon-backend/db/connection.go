@@ -26,7 +26,7 @@ func Connect() *sql.DB {
 	}
 
 	if err := database.Ping(); err != nil {
-		log.Fatalf("fail: database.Ping, %v\n", err)
+		log.Fatalf("Fail: database.Ping, %v\n", err)
 	}
 
 	return database
