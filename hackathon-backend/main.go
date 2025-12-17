@@ -29,9 +29,9 @@ func init() {
 	// ①-1
 	mysqlUser := os.Getenv("DB_USER")
 	mysqlPwd := os.Getenv("DB_USERPWD")
-	mysqlHost := os.Getenv("DB_HOST")
+	instanceConn := os.Getenv("INSTANCE_CONNECTION_NAME")
 	mysqlDatabase := os.Getenv("DB_DATABASE")
-	connStr := fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	connStr := fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/%s", mysqlUser, mysqlPwd, instanceConn, mysqlDatabase)
 	_db, err := sql.Open("mysql", connStr)
 	// ①-2
 	// ①-3
