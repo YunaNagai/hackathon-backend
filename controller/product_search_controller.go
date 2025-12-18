@@ -16,9 +16,12 @@ func GetProductByID(db *sql.DB) http.HandlerFunc {
 
 		product, err := dao.GetProductByID(db, id)
 		if err != nil {
-			http.Error(w, "not found", http.StatusNotFound)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "product not found"})
 			return
 		}
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(product)
 	}

@@ -1,12 +1,14 @@
 package model
 
+import "database/sql"
+
 type Product struct {
-	ID          string `json:"id"`
-	SellerID    string `json:"sellerId"`
-	Title       string `json:"title"`
-	Price       int    `json:"price"`
-	Description string `json:"description"`
-	Status      string `json:"status"`
-	CreatedAt   string `json:"createdAt"`
-	ImageURL    string `json:"imageUrl"`
+	ID          string
+	SellerID    sql.NullString
+	Title       sql.NullString
+	Price       sql.NullInt64
+	Description sql.NullString
+	Status      string
+	CreatedAt   sql.NullTime
+	ImageURL    sql.NullString
 }
