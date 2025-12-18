@@ -16,7 +16,5 @@ steps:
 images:
   - 'gcr.io/$PROJECT_ID/hackathon-backend:$COMMIT_SHA'
 
-logsBucket: 'gs://bucket_hackathon_yn'
-
 options:
   logging: CLOUD_LOGGING_ONLY
