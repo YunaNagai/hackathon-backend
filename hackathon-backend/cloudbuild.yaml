@@ -3,8 +3,8 @@ steps:
     args: [
       'build',
       '-t', 'gcr.io/$PROJECT_ID/hackathon-backend:$COMMIT_SHA',
-      '-f', 'Dockerfile',         # ← 相対パスでOK（Dockerfile と cloudbuild.yaml が同じ場所にあるなら）
-      '.'
+      '-f', 'hackathon-backend/Dockerfile',
+      'hackathon-backend'
     ]
 
   - name: 'gcr.io/cloud-builders/docker'
