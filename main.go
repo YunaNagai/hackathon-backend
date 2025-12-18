@@ -20,6 +20,7 @@ func main() {
 	r.Use(middleware.CORS)
 
 	r.Post("/user", controller.RegisterUserHandler(database))
+	r.Get("/user/{id}", controller.GetUserHandler(database))
 	r.Get("/products", controller.ProductsHandler(database))
 	r.Get("/products/{id}", controller.GetProductByID(database))
 	r.Get("/transactions", withCORS(controller.GetTransactionsHandler(database)))
