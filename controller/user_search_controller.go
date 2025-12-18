@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"hackathon-backend/dao"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func GetUserHandler(db *sql.DB) http.HandlerFunc {
@@ -15,7 +16,9 @@ func GetUserHandler(db *sql.DB) http.HandlerFunc {
 
 		user, err := dao.GetUserByID(db, id)
 		if err != nil {
-			http.Error(w, "user not found", http.StatusNotFound)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "user not found"})
 			return
 		}
 
