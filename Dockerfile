@@ -2,7 +2,7 @@
 
 FROM golang:1.22 AS builder
 WORKDIR /app
-COPY . .
+COPY hackathon-backend/ .  # ← ここが重要
 RUN go mod download
 RUN go build -o server .
 
