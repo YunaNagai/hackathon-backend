@@ -3,8 +3,8 @@ steps:
     args: [
       'build',
       '-t', 'gcr.io/$PROJECT_ID/hackathon-backend:$COMMIT_SHA',
-      '-f', 'hackathon-backend/Dockerfile',
-      'hackathon-backend'
+      '-f', 'Dockerfile',
+      '.'
     ]
 
   - name: 'gcr.io/cloud-builders/docker'

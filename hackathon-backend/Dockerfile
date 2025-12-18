@@ -1,8 +1,6 @@
-# syntax=docker/dockerfile:1
-
 FROM golang:1.22 AS builder
 WORKDIR /app
-COPY hackathon-backend/ .  # ← ここが重要
+COPY . .          # ← これで hackathon-backend/ の中身が全部コピーされる
 RUN go mod download
 RUN go build -o server .
 
