@@ -4,10 +4,12 @@ import (
 	"hackathon-backend/controller"
 	"hackathon-backend/db"
 	"hackathon-backend/middleware"
+	"os"
 
-	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -22,7 +24,11 @@ func main() {
 	r.Get("/products/{id}", controller.GetProductByID(database))
 
 	log.Println("Listening...")
-	if err := http.ListenAndServe(":8000", r); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatal(err)
 	}
 }
