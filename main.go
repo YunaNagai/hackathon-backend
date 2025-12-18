@@ -9,14 +9,6 @@ import (
 	"net/http"
 )
 
-// deploy test
-// deploy test
-// deploy test
-// deploy test
-// deploy test
-// deploy test
-// deploy test
-
 func main() {
 	database := db.Connect()
 	defer database.Close()

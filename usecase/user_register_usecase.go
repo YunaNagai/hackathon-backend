@@ -6,10 +6,13 @@ import (
 	"hackathon-backend/dao"
 	"hackathon-backend/model"
 	"hackathon-backend/utils"
+	"log"
 	"net/http"
 )
 
 func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	log.Println("usecase.RegisterUser called")
+
 	var req model.User
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
