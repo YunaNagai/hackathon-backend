@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+// deploy test
+
 func main() {
 	database := db.Connect()
 	defer database.Close()
@@ -16,7 +18,6 @@ func main() {
 	router.HandleFunc("/products", controller.ProductsHandler(database))
 	handler := middleware.CORS(router)
 
-	// 8000番ポートでリクエストを待ち受ける
 	log.Println("Listening...")
 	if err := http.ListenAndServe(":8000", handler); err != nil {
 		log.Fatal(err)
