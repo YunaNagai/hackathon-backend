@@ -2,32 +2,21 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func Connect() *sql.DB {
-	mysqlUser := os.Getenv("DB_USER")
-	mysqlPwd := os.Getenv("DB_USERPWD")
-	instanceConn := os.Getenv("INSTANCE_CONNECTION_NAME")
-	mysqlDatabase := os.Getenv("DB_DATABASE")
-
-	connStr := fmt.Sprintf(
-		"%s:%s@unix(/cloudsql/%s)/%s",
-		mysqlUser, mysqlPwd, instanceConn, mysqlDatabase,
-	)
-
-	database, err := sql.Open("mysql", connStr)
+	dsn := "root:password@tcp(127.0.0.1:3306)/hackathon"
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		log.Fatalf("fail: sql.Open, %v\n", err)
+		log.Fatal(err)
 	}
 
-	if err := database.Ping(); err != nil {
-		log.Fatalf("Fail: database.Ping, %v\n", err)
+	if err := db.Ping(); err != nil {
+		log.Fatal("Fail: database.Ping,", err)
 	}
 
-	return database
+	return db
 }

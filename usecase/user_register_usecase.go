@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"hackathon-backend/dao"
 	"hackathon-backend/model"
-	"hackathon-backend/utils"
 	"log"
 	"net/http"
 )
@@ -23,7 +22,6 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.ID = utils.NewULID()
 	if err := dao.InsertUser(db, req); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

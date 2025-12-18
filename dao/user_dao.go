@@ -6,6 +6,6 @@ import (
 )
 
 func InsertUser(db *sql.DB, user model.User) error {
-	_, err := db.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", user.ID, user.Name, user.Age)
+	_, err := db.Exec("INSERT INTO user (id, name, email, age) VALUES (?, ?, ?, ?)", user.ID, user.Name, user.Email, user.Age)
 	return err
 }
