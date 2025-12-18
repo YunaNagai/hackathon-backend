@@ -15,7 +15,11 @@ func RegisterProducts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if req.SellerID == "" || req.Title == "" || req.Price <= 0 {
+
+	// NullString / NullInt64 に合わせたバリデーション
+	if !req.SellerID.Valid || req.SellerID.String == "" ||
+		!req.Title.Valid || req.Title.String == "" ||
+		!req.Price.Valid || req.Price.Int64 <= 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
