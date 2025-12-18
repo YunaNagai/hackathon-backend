@@ -1,6 +1,6 @@
 FROM golang:1.22 AS builder
 WORKDIR /app
-COPY . .          # ← これで hackathon-backend/ の中身が全部コピーされる
+COPY . .
 RUN go mod download
 RUN go build -o server .
 
