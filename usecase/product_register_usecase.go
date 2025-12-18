@@ -23,7 +23,7 @@ func RegisterProducts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	req.ID = utils.NewULID()
 	req.Status = "selling"
 
-	if err := dao.InsertUser(db, req); err != nil {
+	if err := dao.InsertProduct(db, req); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
