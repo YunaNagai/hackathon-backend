@@ -19,7 +19,15 @@ func InsertProduct(db *sql.DB, p model.Product) error {
 // 商品一覧取得（GET）
 func SelectAllProducts(db *sql.DB) ([]model.Product, error) {
 	rows, err := db.Query(`
-        SELECT id, seller_id, title, price, description, status, created_at
+        SELECT
+            id,
+            COALESCE(seller_id, ''),
+            COALESCE(title, ''),
+            COALESCE(price, 0),
+            COALESCE(description, ''),
+            status,
+            COALESCE(created_at, NOW()),
+            COALESCE(image_url, '')
         FROM products
         ORDER BY created_at DESC
     `)
@@ -40,6 +48,7 @@ func SelectAllProducts(db *sql.DB) ([]model.Product, error) {
 			&p.Description,
 			&p.Status,
 			&p.CreatedAt,
+			&p.ImageURL,
 		); err != nil {
 			return nil, err
 		}
