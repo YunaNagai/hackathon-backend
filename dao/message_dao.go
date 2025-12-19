@@ -15,7 +15,7 @@ func GetAllMessages(db *sql.DB) ([]model.Message, error) {
 	}
 	defer rows.Close()
 
-	var messages []model.Message
+	messages := []model.Message{}
 
 	for rows.Next() {
 		var m model.Message
