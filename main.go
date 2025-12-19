@@ -26,7 +26,10 @@ func main() {
 		r.Post("/", controller.ProductsHandler(database))
 	})
 	r.Get("/products/{id}", controller.GetProductByID(database))
-	r.Get("/transactions", withCORS(controller.GetTransactionsHandler(database)))
+	r.Route("/transactions", func(r chi.Router) {
+		r.Get("/", withCORS(controller.GetTransactionsHandler(database)))
+		r.Post("/", withCORS(controller.CreateTransactionHandler(database)))
+	})
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
 	r.Post("/messages", withCORS(controller.CreateMessageHandler(database)))
 

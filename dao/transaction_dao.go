@@ -34,3 +34,18 @@ func GetAllTransactions(db *sql.DB) ([]model.Transaction, error) {
 
 	return transactions, nil
 }
+
+func InsertTransaction(db *sql.DB, t model.Transaction) error {
+	_, err := db.Exec(`
+        INSERT INTO transactions (id, product_id, buyer_id, seller_id, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `,
+		t.ID,
+		t.ProductID,
+		t.BuyerID,
+		t.SellerID,
+		t.Status,
+		t.CreatedAt,
+	)
+	return err
+}
