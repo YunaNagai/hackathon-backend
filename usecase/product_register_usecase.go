@@ -18,9 +18,8 @@ func RegisterProducts(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !req.SellerID.Valid || req.SellerID.String == "" ||
-		!req.Title.Valid || req.Title.String == "" ||
-		!req.Price.Valid || req.Price.Int64 <= 0 {
+	// バリデーション（string/int64 用）
+	if req.SellerID == "" || req.Title == "" || req.Price <= 0 {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": "invalid fields"})
