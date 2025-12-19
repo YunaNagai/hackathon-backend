@@ -3,6 +3,7 @@ package dao
 import (
 	"database/sql"
 	"hackathon-backend/model"
+	"log"
 )
 
 func GetAllMessages(db *sql.DB) ([]model.Message, error) {
@@ -45,5 +46,10 @@ func InsertMessage(db *sql.DB, msg model.Message) error {
 		msg.Message,
 		msg.CreatedAt,
 	)
+
+	if err != nil {
+		log.Printf("SQL Insert error: %v", err) // ← ここが一番重要！
+	}
+
 	return err
 }
