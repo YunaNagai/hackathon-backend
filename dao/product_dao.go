@@ -60,12 +60,28 @@ func SelectAllProducts(db *sql.DB) ([]model.Product, error) {
 func GetProductByID(db *sql.DB, id string) (*model.Product, error) {
 	var p model.Product
 	query := `
-		SELECT id, seller_id, title, price, description, status, created_at, image_url
-		FROM products
-		WHERE id = ?
-`
-	err := db.QueryRow(query, id).Scan(&p.ID, &p.SellerID, &p.Title, &p.Price, &p.Description,
-		&p.Status, &p.CreatedAt, &p.ImageURL)
+        SELECT
+            id,
+            COALESCE(seller_id, ''),
+            COALESCE(title, ''),
+            COALESCE(price, 0),
+            COALESCE(description, ''),
+            status,
+            COALESCE(created_at, NOW()),
+            COALESCE(image_url, '')
+        FROM products
+        WHERE id = ?
+    `
+	err := db.QueryRow(query, id).Scan(
+		&p.ID,
+		&p.SellerID,
+		&p.Title,
+		&p.Price,
+		&p.Description,
+		&p.Status,
+		&p.CreatedAt,
+		&p.ImageURL,
+	)
 
 	if err != nil {
 		return nil, err
