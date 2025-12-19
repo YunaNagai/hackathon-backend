@@ -19,3 +19,8 @@ func GetTransactionsHandler(db *sql.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(transactions)
 	}
 }
+func CreateTransactionHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		usecase.CreateTransaction(db, w, r)
+	}
+}
