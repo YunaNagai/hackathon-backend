@@ -8,10 +8,16 @@ import (
 // 商品登録（POST）
 func InsertProduct(db *sql.DB, p model.Product) error {
 	_, err := db.Exec(`
-        INSERT INTO products (id, seller_id, title, price, description, status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, NOW())
+        INSERT INTO products (id, seller_id, title, price, description, status, created_at, image_url)
+        VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)
     `,
-		p.ID, p.SellerID, p.Title, p.Price, p.Description, p.Status,
+		p.ID,
+		p.SellerID,
+		p.Title,
+		p.Price,
+		p.Description,
+		p.Status,
+		p.ImageURL,
 	)
 	return err
 }

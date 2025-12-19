@@ -21,7 +21,10 @@ func main() {
 
 	r.Post("/user", controller.RegisterUserHandler(database))
 	r.Get("/user/{id}", controller.GetUserHandler(database))
-	r.Get("/products", controller.ProductsHandler(database))
+	r.Route("/products", func(r chi.Router) {
+		r.Get("/", controller.ProductsHandler(database))
+		r.Post("/", controller.ProductsHandler(database))
+	})
 	r.Get("/products/{id}", controller.GetProductByID(database))
 	r.Get("/transactions", withCORS(controller.GetTransactionsHandler(database)))
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
