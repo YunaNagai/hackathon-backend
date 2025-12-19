@@ -30,6 +30,7 @@ func main() {
 		r.Get("/", withCORS(controller.GetTransactionsHandler(database)))
 		r.Post("/", withCORS(controller.CreateTransactionHandler(database)))
 	})
+	r.Get("/transactions/{id}", controller.GetTransactionByIDHandler(database))
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
 	r.Post("/messages", withCORS(controller.CreateMessageHandler(database)))
 
