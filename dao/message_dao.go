@@ -23,7 +23,7 @@ func GetAllMessages(db *sql.DB) ([]model.Message, error) {
 			&m.ID,
 			&m.TransactionID,
 			&m.UserName,
-			&m.Message,
+			&m.Text,
 			&m.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -42,7 +42,7 @@ func InsertMessage(db *sql.DB, msg model.Message) error {
 		msg.ID,
 		msg.TransactionID,
 		msg.UserName,
-		msg.Message,
+		msg.Text,
 		msg.CreatedAt,
 	)
 	return err
