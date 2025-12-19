@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"hackathon-backend/model"
 	"hackathon-backend/usecase"
+	"log"
 	"net/http"
 )
 
@@ -30,6 +31,7 @@ func CreateMessageHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		if err := usecase.CreateMessage(db, msg); err != nil {
+			log.Printf("CreateMessage error: %v", err) // ← ここに追加！
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
