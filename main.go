@@ -4,13 +4,14 @@ import (
 	"hackathon-backend/controller"
 	"hackathon-backend/db"
 	"hackathon-backend/middleware"
-	"os"
-
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 )
+
+//test
 
 func main() {
 	database := db.Connect()
