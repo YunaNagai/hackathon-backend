@@ -51,7 +51,17 @@ func InsertTransaction(db *sql.DB, t model.Transaction) error {
 }
 func GetTransactionByID(db *sql.DB, id string) (model.Transaction, error) {
 	var tx model.Transaction
-	err := db.QueryRow("SELECT id, product_id, buyer_id, seller_id, status, created_at FROM transactions WHERE id = ?", id).
-		Scan(&tx.ID, &tx.ProductID, &tx.BuyerID, &tx.SellerID, &tx.Status, &tx.CreatedAt)
+	err := db.QueryRow(`
+        SELECT id, product_id, buyer_id, seller_id, status, created_at
+        FROM transactions
+        WHERE id = ?
+    `, id).Scan(
+		&tx.ID,
+		&tx.ProductID,
+		&tx.BuyerID,
+		&tx.SellerID,
+		&tx.Status,
+		&tx.CreatedAt,
+	)
 	return tx, err
 }
