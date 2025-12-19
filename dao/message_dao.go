@@ -38,7 +38,7 @@ func GetAllMessages(db *sql.DB) ([]model.Message, error) {
 func InsertMessage(db *sql.DB, msg model.Message) error {
 	_, err := db.Exec(`
         INSERT INTO messages (id, transaction_id, user_name, message, created_at)
-        VALUES ($1, $2, $3, $4, $5)
+        VALUES (?, ?, ?, ?, ?)
     `,
 		msg.ID,
 		msg.TransactionID,
