@@ -29,7 +29,7 @@ func CreateTransaction(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 🔥 ここが重要：保存後に完全データを取得して返す
+	// 🔥 ここが絶対必要
 	fullTx, err := dao.GetTransactionByID(db, req.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
