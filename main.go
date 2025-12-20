@@ -4,14 +4,13 @@ import (
 	"hackathon-backend/controller"
 	"hackathon-backend/db"
 	"hackathon-backend/middleware"
+	"hackathon-backend/usecase"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi/v5"
 )
-
-//test
 
 func main() {
 	database := db.Connect()
@@ -22,16 +21,26 @@ func main() {
 
 	r.Post("/user", controller.RegisterUserHandler(database))
 	r.Get("/user/{id}", controller.GetUserHandler(database))
+
 	r.Route("/products", func(r chi.Router) {
 		r.Get("/", controller.ProductsHandler(database))
 		r.Post("/", controller.ProductsHandler(database))
 	})
 	r.Get("/products/{id}", controller.GetProductByID(database))
+
+	// 🔥 重複を削除して1つに統一
 	r.Route("/transactions", func(r chi.Router) {
 		r.Get("/", withCORS(controller.GetTransactionsHandler(database)))
 		r.Post("/", withCORS(controller.CreateTransactionHandler(database)))
 	})
-	r.Get("/transactions/{id}", controller.GetTransactionByIDHandler(database))
+
+	r.Get("/transactions/{id}", withCORS(controller.GetTransactionByIDHandler(database)))
+
+	// 🔥 PUT にも withCORS をつける
+	r.Put("/transactions/{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
+		usecase.UpdateTransaction(database, w, r)
+	}))
+
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
 	r.Post("/messages", withCORS(controller.CreateMessageHandler(database)))
 
@@ -48,7 +57,7 @@ func main() {
 func withCORS(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS") // ← PUT を追加！
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 		if r.Method == "OPTIONS" {
