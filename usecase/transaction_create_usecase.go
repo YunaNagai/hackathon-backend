@@ -29,6 +29,14 @@ func CreateTransaction(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 🔥 ここが重要：保存後に完全データを取得して返す
+	fullTx, err := dao.GetTransactionByID(db, req.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": "fetch error"})
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(req)
+	json.NewEncoder(w).Encode(fullTx)
 }
