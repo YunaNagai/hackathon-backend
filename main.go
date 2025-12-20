@@ -36,11 +36,13 @@ func main() {
 
 	r.Get("/transactions/{id}", withCORS(controller.GetTransactionByIDHandler(database)))
 
-	// 🔥 PUT にも withCORS をつける
+	r.Options("/transactions/{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
 	r.Put("/transactions/{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
 		usecase.UpdateTransaction(database, w, r)
 	}))
-
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
 	r.Post("/messages", withCORS(controller.CreateMessageHandler(database)))
 
