@@ -17,16 +17,15 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Post("/user", controller.RegisterUserHandler(database))
-	r.Get("/user/{id}", controller.GetUserHandler(database))
+	r.Post("/user", withCORS(controller.RegisterUserHandler(database)))
+	r.Get("/user/{id}", withCORS(controller.GetUserHandler(database)))
 
 	r.Route("/products", func(r chi.Router) {
-		r.Get("/", controller.ProductsHandler(database))
-		r.Post("/", controller.ProductsHandler(database))
+		r.Get("/", withCORS(controller.ProductsHandler(database)))
+		r.Post("/", withCORS(controller.ProductsHandler(database)))
 	})
-	r.Get("/products/{id}", controller.GetProductByID(database))
+	r.Get("/products/{id}", withCORS(controller.GetProductByID(database)))
 
-	// 🔥 重複を削除して1つに統一
 	r.Route("/transactions", func(r chi.Router) {
 		r.Get("/", withCORS(controller.GetTransactionsHandler(database)))
 		r.Post("/", withCORS(controller.CreateTransactionHandler(database)))
@@ -36,11 +35,11 @@ func main() {
 		}))
 
 		r.Get("/{id}", withCORS(controller.GetTransactionByIDHandler(database)))
-
 		r.Put("/{id}", withCORS(func(w http.ResponseWriter, r *http.Request) {
 			usecase.UpdateTransaction(database, w, r)
 		}))
 	})
+
 	r.Get("/messages", withCORS(controller.GetMessagesHandler(database)))
 	r.Post("/messages", withCORS(controller.CreateMessageHandler(database)))
 
